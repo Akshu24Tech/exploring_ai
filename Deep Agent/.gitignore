@@ -1,0 +1,6 @@
+LLm Gateway/.env
+.env
+research_analyst/.venv/
+research_analyst/sessions/
+__pycache__/
+*.pyc

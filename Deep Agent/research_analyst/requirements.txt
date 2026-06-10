@@ -1,0 +1,3 @@
+deepagents
+langchain-groq
+python-dotenv
