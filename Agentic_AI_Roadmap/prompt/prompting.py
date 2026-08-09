@@ -8,11 +8,26 @@ Fill in ask() once, every experiment reuses it.
 
 import json
 from collections import Counter
+import os
+from groq import Groq
+from dotenv import load_dotenv
+
+load_dotenv()
+
+client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
 def ask(prompt, system=None, temperature=0.7):
-    # Plug in your Groq/Gemini/Ollama call here.
-    # If your provider takes a separate system message, use `system`.
-    raise NotImplementedError("Add your API call inside ask() first.")
+    messages = []
+    if system:
+        messages.append({"role": "system", "content": system})
+    messages.append({"role": "user", "content": prompt})
+
+    response = client.chat.completions.create(
+        model="llama-3.1-8b-instant",
+        messages=messages,
+        temperature=temperature,
+    )
+    return response.choices[0].message.content
 
 
 # -----------------------------------------------------------
@@ -124,9 +139,27 @@ def experiment_5_output_contract():
 
 # -----------------------------------------------------------
 if __name__ == "__main__":
+    print("==========================================")
+    print("1. experiment_1_system_prompt()")
+    print("==========================================")
     experiment_1_system_prompt()
 
-    # experiment_2_few_shot()
-    # experiment_3_decomposition()
-    # experiment_4_self_consistency()
-    # experiment_5_output_contract()
+    print("\n==========================================")
+    print("2. experiment_2_few_shot()")
+    print("==========================================")
+    experiment_2_few_shot()
+
+    print("\n==========================================")
+    print("3. experiment_3_decomposition()")
+    print("==========================================")
+    experiment_3_decomposition()
+
+    print("\n==========================================")
+    print("4. experiment_4_self_consistency()")
+    print("==========================================")
+    experiment_4_self_consistency()
+
+    print("\n==========================================")
+    print("5. experiment_5_output_contract()")
+    print("==========================================")
+    experiment_5_output_contract()

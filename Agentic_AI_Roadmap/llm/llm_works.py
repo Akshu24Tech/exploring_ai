@@ -10,22 +10,24 @@ STEP 3: Uncomment one experiment at the bottom and run the file.
 
 import tiktoken
 import time
+import os
+from groq import Groq
+from dotenv import load_dotenv
+
+load_dotenv()
+
+client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
 # -----------------------------------------------------------
 # Fill this in once. Every experiment below just calls ask().
 # -----------------------------------------------------------
-def ask(prompt, temperature=0.7):
-    # Example for Groq — uncomment and add your key:
-    # from groq import Groq
-    # client = Groq(api_key="YOUR_KEY")
-    # response = client.chat.completions.create(
-    #     model="llama-3.1-8b-instant",
-    #     messages=[{"role": "user", "content": prompt}],
-    #     temperature=temperature,
-    # )
-    # return response.choices[0].message.content
-
-    raise NotImplementedError("Add your API call inside ask() first.")
+def ask(prompt, temperature=0.7, model="llama-3.1-8b-instant"):
+    response = client.chat.completions.create(
+        model=model,
+        messages=[{"role": "user", "content": prompt}],
+        temperature=temperature,
+    )
+    return response.choices[0].message.content
 
 
 # -----------------------------------------------------------
@@ -101,19 +103,37 @@ def experiment_4_hallucination():
 def experiment_5_model_choice():
     task = "Return JSON with name and role from: 'Akshu is an AI Engineer.'"
 
-    for model_name in ["small model", "big model"]:
+    for model_name, model in [("small model (llama-3.1-8b-instant)", "llama-3.1-8b-instant"), ("big model (llama-3.3-70b-versatile)", "llama-3.3-70b-versatile")]:
         start = time.time()
-        answer = ask(task)  # swap the model inside ask() for each run
+        answer = ask(task, model=model)
         print(f"\n{model_name} ({time.time() - start:.1f}s): {answer}")
 
 
 # -----------------------------------------------------------
-# Run one at a time
+# Run all experiments
 # -----------------------------------------------------------
 if __name__ == "__main__":
+    print("==========================================")
+    print("1. experiment_1_tokens()")
+    print("==========================================")
     experiment_1_tokens()
 
-    # experiment_2_context_window()
-    # experiment_3_temperature()
-    # experiment_4_hallucination()
-    # experiment_5_model_choice()
+    print("\n==========================================")
+    print("2. experiment_2_context_window()")
+    print("==========================================")
+    experiment_2_context_window()
+
+    print("\n==========================================")
+    print("3. experiment_3_temperature()")
+    print("==========================================")
+    experiment_3_temperature()
+
+    print("\n==========================================")
+    print("4. experiment_4_hallucination()")
+    print("==========================================")
+    experiment_4_hallucination()
+
+    print("\n==========================================")
+    print("5. experiment_5_model_choice()")
+    print("==========================================")
+    experiment_5_model_choice()
