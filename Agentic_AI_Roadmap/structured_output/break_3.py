@@ -5,10 +5,25 @@ Break today's structured-output defenses. ~6-7 min per section.
 """
 
 import json
+import os
+from groq import Groq
+from dotenv import load_dotenv
 from pydantic import BaseModel, ValidationError
 
+# Load environment variables from .env file
+dotenv_path = os.path.join(os.path.dirname(__file__), "..", ".env")
+load_dotenv(dotenv_path)
+
+client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+
+
 def ask(prompt, temperature=0.7):
-    raise NotImplementedError("Add your API call inside ask() first.")
+    response = client.chat.completions.create(
+        model="llama-3.1-8b-instant",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=temperature,
+    )
+    return response.choices[0].message.content
 
 
 class Invoice(BaseModel):
@@ -97,7 +112,17 @@ def break_full_context():
 
 # -----------------------------------------------------------
 if __name__ == "__main__":
+    print("==========================================")
+    print("1. break_bad_inputs()")
+    print("==========================================")
     break_bad_inputs()
 
-    # break_dead_tools()
-    # break_full_context()
+    print("\n==========================================")
+    print("2. break_dead_tools()")
+    print("==========================================")
+    break_dead_tools()
+
+    print("\n==========================================")
+    print("3. break_full_context()")
+    print("==========================================")
+    break_full_context()

@@ -8,11 +8,25 @@ Fill in ask() once, every experiment reuses it.
 """
 
 import json
+import os
+from groq import Groq
+from dotenv import load_dotenv
 from pydantic import BaseModel, field_validator, ValidationError
 
+# Load environment variables from .env file
+dotenv_path = os.path.join(os.path.dirname(__file__), "..", ".env")
+load_dotenv(dotenv_path)
+
+client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+
+
 def ask(prompt, temperature=0.7):
-    # Plug in your Groq/Gemini/Ollama call here.
-    raise NotImplementedError("Add your API call inside ask() first.")
+    response = client.chat.completions.create(
+        model="llama-3.1-8b-instant",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=temperature,
+    )
+    return response.choices[0].message.content
 
 
 # -----------------------------------------------------------
@@ -130,8 +144,22 @@ def experiment_4_tool_schema():
 
 # -----------------------------------------------------------
 if __name__ == "__main__":
+    print("==========================================")
+    print("1. experiment_1_json_schema()")
+    print("==========================================")
     experiment_1_json_schema()
 
-    # experiment_2_pydantic()
-    # experiment_3_retry()
-    # experiment_4_tool_schema()
+    print("\n==========================================")
+    print("2. experiment_2_pydantic()")
+    print("==========================================")
+    experiment_2_pydantic()
+
+    print("\n==========================================")
+    print("3. experiment_3_retry()")
+    print("==========================================")
+    experiment_3_retry()
+
+    print("\n==========================================")
+    print("4. experiment_4_tool_schema()")
+    print("==========================================")
+    experiment_4_tool_schema()
