@@ -8,7 +8,7 @@
 ExtractBench is the first comprehensive, enterprise-grade benchmark designed to evaluate **Schema-Guided Document Extraction** at scale across four critical dimensions simultaneously:
 1. **Value Accuracy (Order-Insensitive Value F1)**
 2. **Completeness on Long Records (Combating list truncation)**
-3. **Traceable Source Grounding (Page- and Word-Level Bounding Box IoU $\ge 0.5$)**
+3. **Traceable Source Grounding (Page and Word-Level Bounding Box IoU $\ge 0.5$)**
 4. **Economic Viability (Real measured cost in ¢/page)**
 
 ### Key Benchmark Specs
